@@ -1,0 +1,69 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+/* UTILS */
+#define MOD 1000000007
+#define PI 3.1415926535897932384626433832795
+
+class DisJointSet{
+    vector<int> rank,size,parent;
+    public:
+    DisJointSet(int n){
+        rank.resize(n+1,0);
+        size.resize(n+1,1);
+        parent.resize(n+1);
+        for(int i=0;i<n+1;i++)
+        parent[i]=i;
+    }
+    int findUpar(int u){
+        if(u==parent[u])
+        return u;
+        return parent[u]=findUpar(parent[u]);
+    }
+    void UnionByRank(int u,int v){
+        int ult_pu=findUpar(u);
+        int ult_pv=findUpar(v);
+        if(u==v)return;
+        if(rank[ult_pu]<rank[ult_pv]){
+            parent[ult_pv]=ult_pu;
+        }
+        else if(rank[ult_pu]>rank[ult_pv]){
+            parent[ult_pv]=ult_pu;
+        }
+        else{
+            parent[ult_pv]=ult_pu;
+            ult_pu++;
+        }
+    }
+    void UnionBySize(int u,int v){
+        int ult_pu=findUpar(u);
+        int ult_pv=findUpar(v);
+        if(u==v)return;
+        if(size[ult_pu]<size[ult_pv]){
+            parent[ult_pv]=ult_pu;
+            size[ult_pu]+=size[ult_pv];
+        }
+        else{
+            parent[ult_pv]=ult_pu;
+            size[ult_pv]+=size[ult_pu]; 
+        }
+    }
+};
+/* Main()  function */
+int main()
+{
+DisJointSet ds(7);
+ds.UnionByRank(1,2);
+ds.UnionByRank(2,3);
+ds.UnionByRank(4,5);
+ds.UnionByRank(6,7);
+ds.UnionByRank(5,6);
+if(ds.findUpar(3)==ds.findUpar(7))cout<<"yesss"<<endl;
+else cout<<"no"<<endl;
+ds.UnionByRank(3,7);
+if(ds.findUpar(3)==ds.findUpar(7))cout<<"yesss"<<endl;
+else cout<<"no"<<endl;
+
+return 0;
+}
