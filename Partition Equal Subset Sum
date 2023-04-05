@@ -1,0 +1,89 @@
+class Solution {
+    private:
+    bool solve(int i,int n,vector<int>& nums,int ans,vector<vector<int>>& dp){
+        if(ans<0){
+            return false;
+        }
+        if(i==n && ans!=0){
+            return false;
+        }
+        if(ans==0){
+            return true;
+        }
+        if(dp[i][ans]!=-1){ 
+            return dp[i][ans];
+        }
+        bool take = solve(i+1,n,nums,ans-nums[i],dp);
+        bool notTake = solve(i+1,n,nums,ans,dp);
+
+        return dp[i][ans]=(take | notTake);
+        
+    }
+    bool solveTab(vector<int>& nums){
+        int ans=0;
+        int n=nums.size();
+        for(int i=0;i<n;i++){
+            ans+=nums[i];
+        }
+        if(ans%2==1)return false;
+        ans = ans/2;
+        vector<vector<bool>> dp(n+1,vector<bool>(ans+1,0));
+        for(int i=0;i<n+1;i++){
+            dp[i][0]=1;
+        }
+        for(int i=n-1;i>=0;i--){
+            for(int target=0;target<=ans;target++ ){
+            bool take = false;
+            if(target-nums[i]>=0)
+            take = dp[i+1][target-nums[i]];
+            bool notTake = dp[i+1][target];
+
+            dp[i][target]=(take | notTake);
+            }
+        }
+        return dp[0][ans];
+    }
+    bool solveSpaceOP(vector<int>& nums){
+        int ans=0;
+        int n=nums.size();
+        for(int i=0;i<n;i++){
+            ans+=nums[i];
+        }
+        if(ans%2==1)return false;
+        ans = ans/2;
+        vector<bool> curr(ans+1,0);
+        vector<bool> next(ans+1,0);
+
+        curr[0]=1;
+        next[0]=1;
+        for(int i=n-1;i>=0;i--){
+            for(int target=0;target<=ans;target++ ){
+            bool take = false;
+            if(target-nums[i]>=0)
+            take = next[target-nums[i]];
+            bool notTake = next[target];
+
+            curr[target]=(take | notTake);
+            }
+            next=curr;
+        }
+        return next[ans];
+    }
+public:
+    bool canPartition(vector<int>& nums) {
+        int ans=0;
+        int n=nums.size();
+        for(int i=0;i<n;i++){
+            ans+=nums[i];
+        }
+        if(ans%2==1)return false;
+        ans = ans/2;
+        vector<vector<int>> dp(n+1,vector<int>(ans+1,-1));
+        //return solve(0,n,nums,ans,dp);
+
+        //return solveTab(nums);
+
+        return solveSpaceOP(nums);
+
+    }
+};
