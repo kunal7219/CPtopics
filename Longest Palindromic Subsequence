@@ -1,0 +1,61 @@
+class Solution {
+    private:
+    int solve(int i,int j,int n,int m ,string& text1, string& text2,vector<vector<int>>& dp){
+        if(i>=n || j>=m){
+            return 0;
+        }
+        if(dp[i][j]!=-1){
+            return dp[i][j];
+        }
+        if(text1[i]==text2[j]){
+            return dp[i][j]= 1 + solve(i+1,j+1,n,m,text1,text2,dp);
+        }
+        return dp[i][j] =max(solve(i,j+1,n,m,text1,text2,dp),solve(i+1,j,n,m,text1,text2,dp));
+    }
+    int solveTab(string& text1, string& text2){
+        int n=text1.size();
+        int m=text2.size();
+        vector<vector<int>> dp(n+1,vector<int>(m+1,0));
+        for(int i=n-1;i>=0;i--){
+            for(int j=m-1;j>=0;j--){
+                if(text1[i]==text2[j]){
+        dp[i][j]= 1 + dp[i+1][j+1];
+        }
+        else
+        dp[i][j] =max(dp[i][j+1],dp[i+1][j]);
+        }
+    }
+    return dp[0][0];
+}
+    int solveSpaceOP(string& text1, string& text2){
+        int n=text1.size();
+        int m=text2.size();
+        vector<int> curr(m+1,0);
+        vector<int> next(m+1,0);
+
+    for(int i=n-1;i>=0;i--){
+        for(int j=m-1;j>=0;j--){
+            if(text1[i]==text2[j]){
+                curr[j]= 1 + next[j+1];
+            }
+            else
+                curr[j] =max(curr[j+1],next[j]);
+            }
+            next=curr;
+        }
+    return curr[0];
+}    
+public:
+    int longestPalindromeSubseq(string s) {
+        int n=s.size();
+        int m=n;
+        string revs=s;
+        reverse(revs.begin(),revs.end());
+        //vector<vector<int>> dp(n+1,vector<int>(m+1,-1));
+        //return solve(0,0,n,m,s,revs,dp);
+
+        //return solveTab(s,revs);
+
+        return solveSpaceOP(s,revs);
+    }
+};
