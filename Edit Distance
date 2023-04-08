@@ -1,0 +1,91 @@
+class Solution {
+    private:
+    int solve(int i,int j,int n,int m,string& word1, string& word2,vector<vector<int>>& dp){
+        if(i==n){
+            return (m-j);
+        }
+        if(j==m){
+            return (n-i);
+        }
+        if(dp[i][j]!=-1){
+            return dp[i][j];
+        }
+        if(word1[i]==word2[j]){
+            return dp[i][j]=solve(i+1,j+1,n,m,word1,word2,dp);
+        }
+        else{
+            int delAns = 1 + solve(i+1,j,n,m,word1,word2,dp);
+            int insAns = 1 + solve(i,j+1,n,m,word1,word2,dp);
+            int repAns = 1 + solve(i+1,j+1,n,m,word1,word2,dp);
+            return dp[i][j]=min({delAns,insAns,repAns});
+        }
+    }
+    int solveTab(string& word1, string& word2){
+        int n=word1.length();
+        int m=word2.length();
+        vector<vector<int>> dp(n+2,vector<int>(m+2,0));    
+        for(int i=0;i<n;i++){
+            dp[i][m]=n-i;
+        }
+        for(int j=0;j<m;j++){
+            dp[n][j]=m-j;
+        }
+        
+        for(int i=n-1;i>=0;i--){
+            for(int j=m-1;j>=0;j--){
+                if(word1[i]==word2[j]){
+            dp[i][j]=dp[i+1][j+1];
+        }
+        else{
+            int delAns = 1 + dp[i+1][j];
+            int insAns = 1 + dp[i][j+1];
+            int repAns = 1 + dp[i+1][j+1];
+            dp[i][j]=min({delAns,insAns,repAns});
+        }
+            }
+        }
+        return dp[0][0]; 
+    }
+    int solveSpaceOP(string& word1, string& word2){
+        int n=word1.length();
+        int m=word2.length();
+        vector<int> curr(m+1,0);
+        vector<int> next(m+1,0);    
+        for(int j=0;j<m;j++){
+            next[j]=m-j;
+        }
+        
+        for(int i=n-1;i>=0;i--){
+            for(int j=m-1;j>=0;j--){
+            // catch here->base case se mila jo
+            curr[m]=n-i;
+
+        if(word1[i]==word2[j]){
+            curr[j]=next[j+1];
+        }
+        else{
+            int delAns = 1 + next[j];
+            int insAns = 1 + curr[j+1];
+            int repAns = 1 + next[j+1];
+            curr[j]=min({delAns,insAns,repAns});
+        }
+    }
+    next=curr;
+}
+        return next[0]; 
+    }
+public:
+    int minDistance(string word1, string word2) {
+        int n=word1.length();
+        int m=word2.length();
+        if(word1.length()==0 || word2.length()==0){
+            return max(n,m);
+        }
+        //vector<vector<int>> dp(n+1,vector<int>(m+1,-1));
+        //return solve(0,0,n,m,word1,word2,dp);
+
+        //return solveTab(word1,word2);
+
+        return solveSpaceOP(word1,word2);
+    }
+};
