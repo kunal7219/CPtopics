@@ -1,0 +1,30 @@
+#include <bits/stdc++.h>
+
+
+int solve(int i,int j,int n,int m,vector<vector<int>>& MAT,int& maxi,vector<vector<int>>&dp){
+    if(i>=n || j>=m){
+        return 0;
+    }
+    if(dp[i][j]!=-1){
+        return dp[i][j];
+    }
+    int r = solve(i+1,j,n,m,MAT,maxi,dp);
+    int d = solve(i,j+1,n,m,MAT,maxi,dp);
+    int di = solve(i+1,j+1,n,m,MAT,maxi,dp);
+    if(MAT[i][j]==1){
+        int ans=1+min({r,d,di});
+    maxi=max(maxi,ans);
+    return dp[i][j]=ans;
+    }
+    else{
+        return dp[i][j]=0;
+    }
+}
+
+int maximumAreaSquare(vector<vector<int>>& MAT, int n, int m)
+{   int maxi=0;
+    
+    vector<vector<int>>dp(n+1,vector<int>(m+1,-1));
+    solve(0,0,n,m,MAT,maxi,dp);
+    return maxi*maxi;
+}
