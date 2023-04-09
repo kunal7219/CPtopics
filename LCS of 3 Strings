@@ -1,0 +1,27 @@
+# include <bits/stdc++.h>
+
+int solve(int i,int j,int k,int n,int m,int p,string& a, string& b, string& c,vector<vector<vector<int>>>& dp){
+	if(i<=0 || j<=0 || k<=0){
+		return 0;
+	}
+	if(dp[i-1][j-1][k-1]!=-1){
+		return dp[i-1][j-1][k-1];
+	}	
+	if(a[i-1]==b[j-1] and a[i-1]==c[k-1]){
+		return dp[i-1][j-1][k-1]= 1+solve(i-1,j-1,k-1,n,m,p,a,b,c,dp);
+	}
+	int op1=0,op2=0,op3=0;
+		op1= solve(i,j,k-1,n,m,p,a,b,c,dp);
+		op2= solve(i-1,j,k,n,m,p,a,b,c,dp);
+		op3= solve(i,j-1,k,n,m,p,a,b,c,dp);
+	dp[i-1][j-1][k-1] =max({op1,op2,op3}); 
+	return dp[i-1][j-1][k-1];
+}
+int LCS(string a, string b, string c)
+{
+	int n = a.length();
+	int m = b.length();
+	int p = c.length();
+	vector<vector<vector<int>>> dp (n+1,vector<vector<int>>(m+1,vector<int>(p+1,-1)));
+	return solve(n,m,p,n,m,p,a,b,c,dp);
+}
