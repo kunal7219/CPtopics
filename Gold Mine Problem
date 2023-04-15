@@ -1,0 +1,27 @@
+class Solution{
+    private:
+    int solve(int i,int j,vector<vector<int>>& mine, int n, int m,vector<vector<int>>& dp){
+    if(i<0 || i>=n || j>=m){
+        return 0;
+    }
+    if(dp[i][j]!=-1){
+        return dp[i][j];
+    }
+    int op1= mine[i][j] + solve(i,j+1,mine,n,m,dp);
+    int op2= mine[i][j] + solve(i-1,j+1,mine,n,m,dp);
+    int op3= mine[i][j] + solve(i+1,j+1,mine,n,m,dp);
+    return dp[i][j]=max({op1,op2,op3});
+}
+
+public:
+    int maxGold(int n, int m, vector<vector<int>> mine)
+    {
+    int ans=0;
+    vector<vector<int>> dp(n+1,vector<int>(m+1,-1));
+    for(int i=0;i<n;i++){
+        ans = max(ans,solve(i,0,mine,n,m,dp));
+    }
+    return ans;
+
+    }
+};
