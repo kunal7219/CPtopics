@@ -1,0 +1,19 @@
+#include <bits/stdc++.h>
+bool f(vector<int> & arr,int i,int sum,vector<vector<int>>& dp){
+    if(sum==0)return true;
+    if(i==0)
+    return (arr[i]==sum);
+
+    if(dp[i][sum]!=-1)
+    return dp[i][sum];
+    bool op1=false;
+    if(sum-arr[i]>=0)
+    op1 = f(arr,i-1,sum-arr[i],dp);
+    bool op2 = f(arr,i-1,sum,dp);
+    dp[i][sum] = (op1 || op2);
+    return dp[i][sum];
+}
+bool subsetSumToK(int n, int k, vector<int> &arr) {
+    vector<vector<int>> dp(n+1,vector<int>(k+1,-1));
+    return f(arr,n-1,k,dp);
+}
