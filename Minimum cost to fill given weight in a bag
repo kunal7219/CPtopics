@@ -1,0 +1,32 @@
+class Solution{
+		private:
+		int solve(int n,int w,int cost[],int& mini,vector<vector<int>>& dp){
+		    if((n==-1 && w==0 )){
+		        return 0;
+		    }
+		    if(n==-1){
+		        return 1e6;
+		    }
+		    if(w==0){
+		        return 0;
+		    }
+		    if(dp[n][w]!=-1){
+		        return dp[n][w];
+		    }
+		    if((n+1)>w || cost[n]==-1){
+		        return dp[n][w]=solve(n-1,w,cost,mini,dp);
+		    }
+		    int op1 = 0+solve(n-1,w,cost,mini,dp);
+		    int op2=cost[n]+solve(n,w-n-1,cost,mini,dp);
+		    return dp[n][w]=min(op1,op2);
+		}
+
+	public:
+	int minimumCost(int cost[], int N, int W) 
+	{   int mini=INT_MAX;
+	vector<vector<int>> dp(N+1,vector<int>(W+1,-1));
+        int ans= solve(N-1,W,cost,mini,dp);
+        if(ans>=1e6)return -1;
+        return ans;
+	}
+};
