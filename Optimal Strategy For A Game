@@ -1,0 +1,20 @@
+class Solution{
+    long long solve(int i,int j,int* arr,vector<vector<int>>& dp){
+        if(i>j){
+            return 0;
+        }
+        if(dp[i][j]!=-1){
+            return dp[i][j];
+        }
+        long long op1 =0,op2=0;
+            op1+=arr[i]+min(solve(i+2,j,arr,dp),solve(i+1,j-1,arr,dp));
+            op2+=arr[j]+min(solve(i,j-2,arr,dp),solve(i+1,j-1,arr,dp));
+        
+        return dp[i][j]=max({op1,op2});
+    }
+    public:
+    long long maximumAmount(int arr[], int n){
+        vector<vector<int>> dp(n+1,vector<int>(n+1,-1));
+        return solve(0,n-1,arr,dp);
+    }
+};
