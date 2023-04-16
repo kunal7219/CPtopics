@@ -1,0 +1,25 @@
+int maxSumRectangle(vector<vector<int>> arr)
+{
+    int n=arr.size();
+    int m=arr[0].size();
+
+    int ans=0;
+    for(int i=0;i<m;i++){
+            vector<int> bet(n,0);
+        for(int j=i;j<m;j++){
+            for(int k=0;k<n;k++){
+                bet[k]+=arr[k][j];
+            }
+            int sum=0,maxi=bet[0];
+            for(int i=0;i<n;i++){
+                sum+=bet[i];
+                maxi=max(maxi,sum);
+                if(sum<0)sum=0;
+            }
+            ans=max(ans,maxi);
+        }
+
+    }
+    return ans;
+
+}
